@@ -11,6 +11,9 @@ pdfplumber==0.10.3
 PyPDF2==3.0.1
 python-pptx==0.6.21
 
+# DOCX handling
+python-docx==0.8.11
+
 # XML parsing
 lxml==4.9.3
 
