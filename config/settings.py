@@ -20,8 +20,8 @@ class Settings(BaseSettings):
 
     # Anthropic Claude Configuration
     anthropic_api_key: str
-    anthropic_llm_model: str = "claude-3-sonnet-20240229"
-    anthropic_fallback_model: str = "claude-3-haiku-20240307"
+    anthropic_llm_model: str = "claude-opus-4-1-20250805"
+    anthropic_fallback_model: str = "claude-sonnet-4-20250514"
 
     # Embeddings Configuration (using sentence-transformers)
     embeddings_model: str = "sentence-transformers/all-MiniLM-L6-v2"
