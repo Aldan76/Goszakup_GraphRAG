@@ -7,7 +7,7 @@
 ### Предварительные требования
 - Python 3.10+
 - Neo4j 5.0+
-- OpenAI API ключ
+- Anthropic Claude API ключ (получить на https://console.anthropic.com/)
 - Telegram Bot Token (от @BotFather)
 
 ### Установка зависимостей
@@ -33,8 +33,8 @@ NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=password
 
-# OpenAI
-OPENAI_API_KEY=ваш_ключ_здесь
+# Anthropic Claude
+ANTHROPIC_API_KEY=ваш_ключ_здесь
 
 # Админы (ID пользователей через запятую)
 TELEGRAM_ADMIN_IDS=123456789,987654321
@@ -87,12 +87,12 @@ telegram_bot/bot.py (GoszakupBot)
     ↓
 rag_engine/rag_chain.py (RAGChain)
     ↓
-┌─────────────────────────────┐
-├─ graph_retriever (Search)   │
-├─ embeddings (OpenAI)        │
-└─ graph_loader (Neo4j)       │
+┌──────────────────────────────────────┐
+├─ graph_retriever (Search)            │
+├─ embeddings (sentence-transformers)  │
+└─ graph_loader (Neo4j)                │
     ↓
-LLM Response (gpt-4/3.5)
+LLM Response (Claude 3 Sonnet/Haiku)
     ↓
 Telegram User
 ```
@@ -101,8 +101,8 @@ Telegram User
 
 ### Query Processing
 1. **Retrieval** - поиск релевантной информации в графе
-2. **Embedding** - генерация embeddings для семантического поиска
-3. **LLM** - генерация ответа через GPT-4
+2. **Embedding** - генерация embeddings с помощью sentence-transformers (локально)
+3. **LLM** - генерация ответа через Claude 3 (Sonnet или Haiku)
 4. **Formatting** - форматирование для Telegram
 
 ### Maintenance Mode
@@ -144,10 +144,10 @@ LOG_LEVEL=INFO
 - Проверьте, что Neo4j запущен
 - Проверьте URI, user, password в .env
 
-### Ошибки OpenAI API
+### Ошибки Anthropic Claude API
 - Проверьте, что API ключ корректен
-- Проверьте лимиты на аккаунте OpenAI
-- Бот автоматически переключится на fallback модель (GPT-3.5)
+- Проверьте лимиты на аккаунте Anthropic
+- Бот автоматически переключится на fallback модель (Claude Haiku)
 
 ### Ошибки подключения Telegram
 - Проверьте, что токен корректен
@@ -165,10 +165,10 @@ LOG_LEVEL=INFO
 Для проблем и вопросов:
 1. Проверьте логи в `logs/app.log`
 2. Проверьте конфигурацию в `.env`
-3. Убедитесь, что все сервисы запущены (Neo4j, OpenAI API доступна)
+3. Убедитесь, что все сервисы запущены (Neo4j, Anthropic API доступна)
 
 ## 📚 Дополнительные ресурсы
 
 - [python-telegram-bot документация](https://docs.python-telegram-bot.org/)
 - [Neo4j Python документация](https://neo4j.com/docs/api/python/)
-- [OpenAI API документация](https://platform.openai.com/docs)
+- [Anthropic Claude API документация](https://docs.anthropic.com/)

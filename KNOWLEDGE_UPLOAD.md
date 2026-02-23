@@ -87,7 +87,7 @@ HierarchicalChunker
 Neo4j Graph Creation
 ├─ Узлы: Document, Concept, Rule, Definition, Procedure, Chunk
 ├─ Связи: DEFINES, RELATED_TO, GOVERNED_BY, USES_CONCEPT
-└─ Embeddings: OpenAI embeddings для семантического поиска
+└─ Embeddings: sentence-transformers для локального семантического поиска
     ↓
 Knowledge Graph готов! ✅
 ```
@@ -191,10 +191,10 @@ $ python upload_knowledge.py --summary
 User: "Какие требования к участнику аукциона?"
 
 Bot (через RAG):
-1. Извлекает запрос в embedding
+1. Извлекает запрос в embedding (sentence-transformers)
 2. Ищет в Knowledge Graph
 3. Находит Definition и Rule узлы
-4. Отправляет контекст в GPT-4
+4. Отправляет контекст в Claude AI
 5. Получает ответ:
    "По закону, участник должен:
     - Быть зарегистрирован
@@ -260,8 +260,11 @@ LANGUAGE=kk  # Казахский
 CHUNK_SIZE=500
 CHUNK_OVERLAP=100
 
-# OpenAI для embeddings
-OPENAI_API_KEY=sk-...
+# Anthropic Claude для генерации ответов
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Embeddings (локально, без API)
+EMBEDDINGS_MODEL=sentence-transformers/all-MiniLM-L6-v2
 ```
 
 ## 🔒 Безопасность

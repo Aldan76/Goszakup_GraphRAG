@@ -1,6 +1,6 @@
 # GraphRAG для Telegram-бота государственных закупок
 
-Система для анализа и поиска информации по государственным закупкам с использованием граф-базы данных (Neo4j) и больших языковых моделей (OpenAI).
+Система для анализа и поиска информации по государственным закупкам с использованием граф-базы данных (Neo4j) и больших языковых моделей (Claude AI от Anthropic).
 
 ## Архитектура
 
@@ -56,7 +56,7 @@ Document
 
 - Python 3.10+
 - Neo4j 5.0+
-- OpenAI API ключ
+- Anthropic Claude API ключ (получить на https://console.anthropic.com/)
 
 ## Установка
 
@@ -179,7 +179,7 @@ pytest tests/ --cov=config,parsers,graph_loader,rag_engine,telegram_bot
 - ✅ Neo4j интеграция
 - ✅ RAG Engine (core компоненты)
 - ✅ Telegram Bot (основной функционал)
-- ✅ Обработка запросов через OpenAI GPT-4/3.5
+- ✅ Обработка запросов через Claude 3 (Sonnet/Haiku)
 - 🔄 Расширенные тесты (в процессе)
 - ⏳ Оптимизация и production deployment (планируется)
 

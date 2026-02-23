@@ -7,7 +7,7 @@ Deploy GraphRAG Expert Consultant Bot to Railway.app
 - Railway account (you have it already ✓)
 - GitHub account connected to Railway
 - Neo4j Aura account (free) OR Docker on Railway
-- OpenAI API key
+- Anthropic Claude API key (from https://console.anthropic.com/)
 - Telegram bot token
 
 ## 🎯 Deployment Steps (5 minutes)
@@ -56,11 +56,14 @@ In Railway Dashboard → Variables:
 
 ```
 TELEGRAM_BOT_TOKEN=8617987568:AAGkDlRS5yQxxfA2ZUrgTbQj-V3uFJGuKmU
-OPENAI_API_KEY=sk-your-key-here
+ANTHROPIC_API_KEY=sk-ant-your-key-here
 NEO4J_URI=neo4j+s://xxxxx.databases.neo4j.io  (or bolt://neo4j:7687)
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=your-password
 NEO4J_DATABASE=neo4j
+ANTHROPIC_LLM_MODEL=claude-3-sonnet-20240229
+ANTHROPIC_FALLBACK_MODEL=claude-3-haiku-20240307
+EMBEDDINGS_MODEL=sentence-transformers/all-MiniLM-L6-v2
 LOG_LEVEL=INFO
 TELEGRAM_ADMIN_IDS=your-id-here
 ```
@@ -159,9 +162,10 @@ Common issues:
    → For Aura: neo4j+s://...
    → For Docker: bolt://neo4j:7687
 
-❌ "OpenAI API error"
-   → Check OPENAI_API_KEY is valid
+❌ "Claude API error"
+   → Check ANTHROPIC_API_KEY is valid
    → Check account has credits
+   → Verify API key format (starts with sk-ant-)
 ```
 
 ### Bot keeps restarting
@@ -180,9 +184,10 @@ Railway (free plan):
 Neo4j Aura (free):
 - 100k requests/month free
 
-OpenAI (variable):
-- ~$0.01-0.02 per user query
-- $5-10/month for active bot
+Anthropic Claude (variable):
+- ~$0.003-0.015 per user query (depending on model)
+- $5-20/month for active bot with Sonnet model
+- Cheaper with Haiku model (~$0.8-5/month)
 ```
 
 ## 📈 Monitoring

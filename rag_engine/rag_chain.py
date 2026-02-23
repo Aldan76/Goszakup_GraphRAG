@@ -1,11 +1,11 @@
 """
-RAG chain for processing queries through LLM with graph context.
+RAG chain for processing queries through Claude AI with graph context.
 """
 
 import logging
 from typing import Optional
 
-from openai import OpenAI
+import anthropic
 
 from config.settings import settings
 from graph_loader.neo4j_connector import Neo4jConnector
@@ -36,8 +36,8 @@ class RAGChain:
         self.connector = neo4j_connector
         self.embeddings = embeddings_manager
         self.retriever = GraphRetriever(neo4j_connector, embeddings_manager)
-        self.llm_model = llm_model or settings.openai_llm_model
-        self.client = OpenAI(api_key=settings.openai_api_key)
+        self.llm_model = llm_model or settings.anthropic_llm_model
+        self.client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
     def query(self, question: str, query_type: str = "qa") -> Optional[str]:
         """
@@ -111,16 +111,16 @@ class RAGChain:
             return PromptTemplates.get_qa_prompt(context_text, question)
 
     def _generate_response(self, prompt: str) -> Optional[str]:
-        """Generate response using LLM."""
+        """Generate response using Claude AI."""
         try:
-            response = self.client.chat.completions.create(
+            message = self.client.messages.create(
                 model=self.llm_model,
+                max_tokens=1500,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7,
-                max_tokens=1500,
             )
 
-            answer = response.choices[0].message.content.strip()
+            answer = message.content[0].text.strip()
             logger.info(f"Generated response ({len(answer)} chars)")
             return answer
 
@@ -130,18 +130,18 @@ class RAGChain:
             return self._generate_with_fallback(prompt)
 
     def _generate_with_fallback(self, prompt: str) -> Optional[str]:
-        """Generate response using fallback model."""
+        """Generate response using fallback Claude model."""
         try:
-            logger.info(f"Trying fallback model: {settings.openai_fallback_model}")
+            logger.info(f"Trying fallback model: {settings.anthropic_fallback_model}")
 
-            response = self.client.chat.completions.create(
-                model=settings.openai_fallback_model,
+            message = self.client.messages.create(
+                model=settings.anthropic_fallback_model,
+                max_tokens=1000,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7,
-                max_tokens=1000,
             )
 
-            return response.choices[0].message.content.strip()
+            return message.content[0].text.strip()
 
         except Exception as e:
             logger.error(f"Fallback generation also failed: {e}")

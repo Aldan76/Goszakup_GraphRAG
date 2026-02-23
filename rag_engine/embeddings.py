@@ -1,12 +1,13 @@
 """
 Embeddings management for RAG queries and documents.
+Uses sentence-transformers for local embeddings generation.
 """
 
 import hashlib
 import logging
 from typing import List, Optional
 
-from openai import OpenAI
+from sentence_transformers import SentenceTransformer
 
 from config.settings import settings
 
@@ -21,11 +22,19 @@ class EmbeddingsManager:
         Initialize embeddings manager.
 
         Args:
-            model: OpenAI embedding model (default from settings)
+            model: Sentence-transformers model name (default from settings)
             cache_enabled: Whether to cache embeddings
         """
-        self.model = model or settings.openai_embedding_model
-        self.client = OpenAI(api_key=settings.openai_api_key)
+        self.model_name = model or settings.embeddings_model
+        try:
+            self.model = SentenceTransformer(self.model_name)
+            logger.info(f"Loaded embeddings model: {self.model_name}")
+        except Exception as e:
+            logger.error(f"Failed to load embeddings model: {e}")
+            # Fallback to smaller model
+            self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
+            self.model = SentenceTransformer(self.model_name)
+
         self.cache_enabled = cache_enabled
         self._embedding_cache = {}
 
@@ -35,7 +44,7 @@ class EmbeddingsManager:
 
     def embed_text(self, text: str) -> Optional[List[float]]:
         """
-        Generate embedding for text.
+        Generate embedding for text using sentence-transformers.
 
         Args:
             text: Text to embed
@@ -53,13 +62,8 @@ class EmbeddingsManager:
             return self._embedding_cache[cache_key]
 
         try:
-            response = self.client.embeddings.create(
-                model=self.model,
-                input=text.strip(),
-                encoding_format="float",
-            )
-
-            embedding = response.data[0].embedding
+            # sentence-transformers returns numpy array, convert to list
+            embedding = self.model.encode(text.strip(), convert_to_tensor=False).tolist()
 
             # Cache embedding
             if self.cache_enabled:
