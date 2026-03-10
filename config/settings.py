@@ -18,11 +18,13 @@ class Settings(BaseSettings):
     neo4j_password: str = "password"
     neo4j_database: str = "neo4j"
 
-    # OpenAI Configuration
-    openai_api_key: str
-    openai_embedding_model: str = "text-embedding-3-small"
-    openai_llm_model: str = "gpt-4"
-    openai_fallback_model: str = "gpt-3.5-turbo"
+    # Anthropic Claude Configuration
+    anthropic_api_key: str
+    anthropic_llm_model: str = "claude-opus-4-1-20250805"
+    anthropic_fallback_model: str = "claude-sonnet-4-20250514"
+
+    # Embeddings Configuration (using sentence-transformers)
+    embeddings_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
     # Telegram Bot
     telegram_bot_token: str

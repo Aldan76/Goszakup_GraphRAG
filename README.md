@@ -1,6 +1,6 @@
 # GraphRAG для Telegram-бота государственных закупок
 
-Система для анализа и поиска информации по государственным закупкам с использованием граф-базы данных (Neo4j) и больших языковых моделей (OpenAI).
+Система для анализа и поиска информации по государственным закупкам с использованием граф-базы данных (Neo4j) и больших языковых моделей (Claude AI от Anthropic).
 
 ## Архитектура
 
@@ -56,7 +56,7 @@ Document
 
 - Python 3.10+
 - Neo4j 5.0+
-- OpenAI API ключ
+- Anthropic Claude API ключ (получить на https://console.anthropic.com/)
 
 ## Установка
 
@@ -133,21 +133,34 @@ response = chain.query("Найди закупки по компьютерной 
 print(response)
 ```
 
-## Развёртывание
+## Запуск
 
-### Локальная разработка
+### Data Pipeline (обработка документов)
 
 ```bash
-python main.py
+python main.py pipeline
+```
+
+### Telegram Bot
+
+```bash
+python main.py bot
+```
+
+Или напрямую:
+```bash
+python -m telegram_bot
 ```
 
 ### Production
 
 1. Развернуть Neo4j на выделенном сервере
-2. Установить бота на VPS/Docker
+2. Установить бота на VPS/Docker с systemd или PM2
 3. Конфигурировать логирование и мониторинг
 4. Установить TELEGRAM_BOT_TOKEN в .env
-5. Запустить бота: `python -m telegram_bot.bot`
+5. Запустить бота: `python main.py bot`
+
+Детальные инструкции см. в [TELEGRAM_BOT.md](TELEGRAM_BOT.md)
 
 ## Тестирование
 
@@ -164,9 +177,11 @@ pytest tests/ --cov=config,parsers,graph_loader,rag_engine,telegram_bot
 
 - ✅ Парсеры (JSON, XML, PDF)
 - ✅ Neo4j интеграция
-- 🔄 RAG Engine (в разработке)
-- 🔄 Telegram Bot (в разработке)
-- ⏳ Тестирование (планируется)
+- ✅ RAG Engine (core компоненты)
+- ✅ Telegram Bot (основной функционал)
+- ✅ Обработка запросов через Claude 3 (Sonnet/Haiku)
+- 🔄 Расширенные тесты (в процессе)
+- ⏳ Оптимизация и production deployment (планируется)
 
 ## Лицензия
 
